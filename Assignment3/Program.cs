@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Assignment3
 {
@@ -13,14 +16,17 @@ namespace Assignment3
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateWebHostBuilder(args).Build().Run();
+            //CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .ConfigureServices((context, services) =>
                 {
-                    webBuilder.UseStartup<Startup>();
-                });
+                    services.Configure<KestrelServerOptions>(
+                        context.Configuration.GetSection("Kestrel"));
+                })
+                .UseStartup<Startup>();
     }
 }

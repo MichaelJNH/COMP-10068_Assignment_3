@@ -20,26 +20,41 @@ namespace Assignment3.Controllers
         {
             _context = context;
         }
-
-        // GET: api/Patient
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Patient>>> GetPatient()
-        {
-            return await _context.Patient.ToListAsync();
-        }
-
-        // GET: api/Patient/5
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<Patient>> GetPatient(Guid id)
         {
-            var patient = await _context.Patient.FindAsync(id);
+            var result = await _context.Patient.FindAsync(id);
 
-            if (patient == null)
+            if (result == null)
             {
                 return NotFound();
             }
 
-            return patient;
+            return result;
+        }
+
+        // GET: api/Patient?firstName=Michael
+        // GET: api/Patient?lastName=Helbert
+        // GET: api/Patiennt?dateOfBirth=1999-06-04
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Patient>>> GetPatient([FromQuery(Name = "firstName")] string? firstName, [FromQuery(Name = "lastName")] string? lastName, [FromQuery(Name = "dateOfBirth")] string? dateOfBirth)
+        {
+            List<Patient> results = null;
+
+            if (firstName != null)
+                results = await _context.Patient.Where(p => p.FirstName == firstName).ToListAsync();
+            else if (lastName != null)
+                results = await _context.Patient.Where(p => p.LastName == lastName).ToListAsync();
+            else if (dateOfBirth != null)
+                results = await _context.Patient.Where(p => p.DateOfBirth == DateTime.Parse(dateOfBirth)).ToListAsync();
+
+            if (results == null)
+                return BadRequest();
+            else if (results.Count == 0)
+                return NotFound();
+
+            return results;
         }
 
         // PUT: api/Patient/5

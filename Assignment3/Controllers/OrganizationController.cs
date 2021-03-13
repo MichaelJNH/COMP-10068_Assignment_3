@@ -42,6 +42,26 @@ namespace Assignment3.Controllers
             return organization;
         }
 
+        // GET: api/Organization?name=Corpo
+        // GET: api/Organization?type=Clinic
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Organization>>> GetProvider([FromQuery(Name = "name")] string? name, [FromQuery(Name = "type")] string? type)
+        {
+            List<Organization> results = null;
+
+            if (name != null)
+                results = await _context.Organization.Where(o => o.Name == name).ToListAsync();
+            else if (type != null)
+                results = await _context.Organization.Where(o => o.Type == type).ToListAsync();
+
+            if (results == null)
+                return BadRequest();
+            else if (results.Count == 0)
+                return NotFound();
+
+            return results;
+        }
+
         // PUT: api/Organization/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.

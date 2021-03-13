@@ -21,13 +21,6 @@ namespace Assignment3.Controllers
             _context = context;
         }
 
-        // GET: api/Immunization
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Immunization>>> GetImmunization()
-        {
-            return await _context.Immunization.ToListAsync();
-        }
-
         // GET: api/Immunization/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Immunization>> GetImmunization(Guid id)
@@ -40,6 +33,32 @@ namespace Assignment3.Controllers
             }
 
             return immunization;
+        }
+
+        // GET: api/Immunization?creationTime=2000-05-06
+        // GET: api/Immunization?officialName=ImmuName
+        // GET: api/Immunization?tradeName=trName
+        // GET: api/Immunization?lotNumber=a123456
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Immunization>>> GetProvider([FromQuery(Name = "officialName")] string? officialName, [FromQuery(Name = "creationTime")] string? creationTime, [FromQuery(Name = "tradeName")] string? tradeName, [FromQuery(Name = "lotNumber")] string? lotNumber)
+        {
+            List<Immunization> results = null;
+
+            if (officialName != null)
+                results = await _context.Immunization.Where(i => i.OfficialName == officialName).ToListAsync();
+            else if (creationTime != null)
+                results = await _context.Immunization.Where(i => i.CreationTime == DateTime.Parse(creationTime)).ToListAsync();
+            else if (tradeName != null)
+                results = await _context.Immunization.Where(i => i.TradeName == tradeName).ToListAsync();
+            else if (lotNumber != null)
+                results = await _context.Immunization.Where(i => i.LotNumber == lotNumber).ToListAsync();
+
+            if (results == null)
+                return BadRequest();
+            else if (results.Count == 0)
+                return NotFound();
+
+            return results;
         }
 
         // PUT: api/Immunization/5

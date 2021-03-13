@@ -21,13 +21,6 @@ namespace Assignment3.Controllers
             _context = context;
         }
 
-        // GET: api/Provider
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Provider>>> GetProvider()
-        {
-            return await _context.Provider.ToListAsync();
-        }
-
         // GET: api/Provider/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Provider>> GetProvider(Guid id)
@@ -40,6 +33,29 @@ namespace Assignment3.Controllers
             }
 
             return provider;
+        }
+
+        // GET: api/Provider?firstName=Michael
+        // GET: api/Provider?lastName=Helbert
+        // GET: api/Provider?licenseNumber=CAJA723
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Provider>>> GetProvider([FromQuery(Name = "firstName")] string? firstName, [FromQuery(Name = "lastName")] string? lastName, [FromQuery(Name = "licensePlate")] uint? licensePlate)
+        {
+            List<Provider> results = null;
+
+            if (firstName != null)
+                results = await _context.Provider.Where(p => p.FirstName == firstName).ToListAsync();
+            else if (lastName != null)
+                results = await _context.Provider.Where(p => p.LastName == lastName).ToListAsync();
+            else if (licensePlate != null)
+                results = await _context.Provider.Where(p => p.LicenseNumber == licensePlate).ToListAsync();
+
+            if (results == null)
+                return BadRequest();
+            else if (results.Count == 0)
+                return NotFound();
+
+            return results;
         }
 
         // PUT: api/Provider/5

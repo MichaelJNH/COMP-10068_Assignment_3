@@ -14,12 +14,9 @@ namespace Assignment3.Data
         {
         }
 
-        public DbSet<Assignment3.Models.Immunization> Immunization { get; set; }
-
-        public DbSet<Assignment3.Models.Organization> Organization { get; set; }
-
-        public DbSet<Assignment3.Models.Patient> Patient { get; set; }
-
-        public DbSet<Assignment3.Models.Provider> Provider { get; set; }
+        public DbSet<Immunization> Immunization { get; set; }
+        public DbSet<Organization> Organization { get; set; }
+        public DbSet<Patient> Patient { get; set; }
+        public DbSet<Provider> Provider { get; set; }
     }
 }
