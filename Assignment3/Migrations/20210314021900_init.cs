@@ -17,7 +17,7 @@ namespace Assignment3.Migrations
                     TradeName = table.Column<string>(maxLength: 128, nullable: true),
                     LotNumber = table.Column<string>(maxLength: 255, nullable: false),
                     ExpirationDate = table.Column<DateTimeOffset>(nullable: false),
-                    UpdatedTime = table.Column<DateTimeOffset>(nullable: false)
+                    UpdatedTime = table.Column<DateTimeOffset>(nullable: true)
                 },
                 constraints: table =>
                 {
