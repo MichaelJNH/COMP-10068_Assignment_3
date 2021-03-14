@@ -69,6 +69,7 @@ namespace Assignment3.Controllers
             }
 
             _context.Entry(patient).State = EntityState.Modified;
+            _context.Entry(patient).Property(x => x.CreationTime).IsModified = false;
 
             try
             {
@@ -95,6 +96,7 @@ namespace Assignment3.Controllers
         [HttpPost]
         public async Task<ActionResult<Patient>> PostPatient(Patient patient)
         {
+            patient.CreationTime = DateTimeOffset.Now;
             _context.Patient.Add(patient);
             await _context.SaveChangesAsync();
 

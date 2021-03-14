@@ -72,7 +72,9 @@ namespace Assignment3.Controllers
                 return BadRequest();
             }
 
+            immunization.UpdatedTime = DateTimeOffset.Now;
             _context.Entry(immunization).State = EntityState.Modified;
+            _context.Entry(immunization).Property(x => x.CreationTime).IsModified = false;
 
             try
             {
@@ -99,6 +101,7 @@ namespace Assignment3.Controllers
         [HttpPost]
         public async Task<ActionResult<Immunization>> PostImmunization(Immunization immunization)
         {
+            immunization.CreationTime = DateTimeOffset.Now;
             _context.Immunization.Add(immunization);
             await _context.SaveChangesAsync();
 

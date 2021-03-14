@@ -74,6 +74,7 @@ namespace Assignment3.Controllers
             }
 
             _context.Entry(organization).State = EntityState.Modified;
+            _context.Entry(organization).Property(x => x.CreationTime).IsModified = false;
 
             try
             {
@@ -100,6 +101,7 @@ namespace Assignment3.Controllers
         [HttpPost]
         public async Task<ActionResult<Organization>> PostOrganization(Organization organization)
         {
+            organization.CreationTime = DateTimeOffset.Now;
             _context.Organization.Add(organization);
             await _context.SaveChangesAsync();
 

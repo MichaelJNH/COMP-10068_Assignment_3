@@ -45,7 +45,7 @@ namespace Assignment3.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<DateTimeOffset>("UpdatedTime")
+                    b.Property<DateTimeOffset?>("UpdatedTime")
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");

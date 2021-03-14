@@ -70,6 +70,7 @@ namespace Assignment3.Controllers
             }
 
             _context.Entry(provider).State = EntityState.Modified;
+            _context.Entry(provider).Property(x => x.CreationTime).IsModified = false;
 
             try
             {
@@ -96,6 +97,7 @@ namespace Assignment3.Controllers
         [HttpPost]
         public async Task<ActionResult<Provider>> PostProvider(Provider provider)
         {
+            provider.CreationTime = DateTimeOffset.Now;
             _context.Provider.Add(provider);
             await _context.SaveChangesAsync();
 
