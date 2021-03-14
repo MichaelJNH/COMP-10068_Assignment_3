@@ -28,22 +28,23 @@ namespace Assignment3UnitTest
         [TestMethod]
         public async Task Immunization_GetPostUpdateDeleteAsync()
         {
+
+            Immunization testImmunization = new Immunization()
+            {
+                Id = Guid.NewGuid(),
+                OfficialName = "OfficialName123",
+                TradeName = "TradeName321",
+                LotNumber = "a1234",
+                ExpirationDate = new DateTime(2005, 06, 04),
+            };
+
+            //POST
             using (var context = new Assignment3Context(contextOptions))
             {
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
 
                 var controller = new ImmunizationController(context);
-
-                //POST
-                Immunization testImmunization = new Immunization()
-                {
-                    Id = Guid.NewGuid(),
-                    OfficialName = "OfficialName123",
-                    TradeName = "TradeName321",
-                    LotNumber = "a1234",
-                    ExpirationDate = new DateTime(2005, 06, 04),
-                };
 
                 //Create the Immunization defined by testImmunization
                 await controller.PostImmunization(testImmunization);
@@ -53,9 +54,16 @@ namespace Assignment3UnitTest
                     controller.GetImmunization(testImmunization.Id).Result.Value,
                     testImmunization
                 );
+            }
+
+            //PUT
+            using (var context = new Assignment3Context(contextOptions))
+            {
+                var controller = new ImmunizationController(context);
 
                 Immunization testChangedImmunization = new Immunization()
                 {
+                    Id = testImmunization.Id,
                     OfficialName = "OfficialChangedName123",
                     TradeName = testImmunization.TradeName,
                     LotNumber = testImmunization.LotNumber,
