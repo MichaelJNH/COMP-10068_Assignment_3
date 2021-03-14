@@ -18,5 +18,6 @@ namespace Assignment3.Data
         public DbSet<Organization> Organization { get; set; }
         public DbSet<Patient> Patient { get; set; }
         public DbSet<Provider> Provider { get; set; }
+        public DbSet<Assignment3.Models.ErrorResponse> ErrorResponse { get; set; }
     }
 }

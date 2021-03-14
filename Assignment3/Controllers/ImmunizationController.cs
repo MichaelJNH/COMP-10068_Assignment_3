@@ -29,7 +29,7 @@ namespace Assignment3.Controllers
 
             if (immunization == null)
             {
-                return NotFound();
+                throw new StatusException(404, "No immunization with that ID exists.");
             }
 
             return immunization;
@@ -54,9 +54,9 @@ namespace Assignment3.Controllers
                 results = await _context.Immunization.Where(i => i.LotNumber == lotNumber).ToListAsync();
 
             if (results == null)
-                return BadRequest();
+                throw new StatusException(400, "Search query missing.");
             else if (results.Count == 0)
-                return NotFound();
+                throw new StatusException(404, "No immunizations were found.");
 
             return results;
         }
@@ -69,7 +69,7 @@ namespace Assignment3.Controllers
         {
             if (id != immunization.Id)
             {
-                return BadRequest();
+                throw new StatusException(400, "Attempted to PUT immunization with wrong Id");
             }
 
             immunization.UpdatedTime = DateTimeOffset.Now;
@@ -84,7 +84,7 @@ namespace Assignment3.Controllers
             {
                 if (!ImmunizationExists(id))
                 {
-                    return NotFound();
+                    throw new StatusException(404, "No immunization with that ID exists.");
                 }
                 else
                 {
@@ -115,7 +115,7 @@ namespace Assignment3.Controllers
             var immunization = await _context.Immunization.FindAsync(id);
             if (immunization == null)
             {
-                return NotFound();
+                throw new StatusException(404, "No immunization with that ID exists.");
             }
 
             _context.Immunization.Remove(immunization);

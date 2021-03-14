@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Assignment3.Data;
 using Assignment3.Models;
+using Microsoft.Extensions.Primitives;
 
 namespace Assignment3.Controllers
 {
@@ -28,7 +29,7 @@ namespace Assignment3.Controllers
 
             if (result == null)
             {
-                return NotFound();
+                throw new StatusException(404, "No patient with that ID exists.");
             }
 
             return result;
@@ -50,9 +51,9 @@ namespace Assignment3.Controllers
                 results = await _context.Patient.Where(p => p.DateOfBirth == DateTime.Parse(dateOfBirth)).ToListAsync();
 
             if (results == null)
-                return BadRequest();
+                throw new StatusException(400, "Search query missing.");
             else if (results.Count == 0)
-                return NotFound();
+                throw new StatusException(404, "No patients were found.");
 
             return results;
         }
@@ -65,7 +66,7 @@ namespace Assignment3.Controllers
         {
             if (id != patient.Id)
             {
-                return BadRequest();
+                throw new StatusException(400, "Attempted to PUT patient with wrong Id");
             }
 
             _context.Entry(patient).State = EntityState.Modified;
@@ -79,7 +80,7 @@ namespace Assignment3.Controllers
             {
                 if (!PatientExists(id))
                 {
-                    return NotFound();
+                    throw new StatusException(404, "No patient with that ID exists.");
                 }
                 else
                 {
@@ -110,7 +111,7 @@ namespace Assignment3.Controllers
             var patient = await _context.Patient.FindAsync(id);
             if (patient == null)
             {
-                return NotFound();
+                throw new StatusException(404, "No patient with that ID exists.");
             }
 
             _context.Patient.Remove(patient);
