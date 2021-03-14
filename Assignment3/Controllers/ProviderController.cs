@@ -29,7 +29,7 @@ namespace Assignment3.Controllers
 
             if (provider == null)
             {
-                return NotFound();
+                throw new StatusException(404, "No provider with that ID exists.");
             }
 
             return provider;
@@ -51,9 +51,9 @@ namespace Assignment3.Controllers
                 results = await _context.Provider.Where(p => p.LicenseNumber == licensePlate).ToListAsync();
 
             if (results == null)
-                return BadRequest();
+                throw new StatusException(400, "Search query missing.");
             else if (results.Count == 0)
-                return NotFound();
+                throw new StatusException(404, "No providers were found.");
 
             return results;
         }
@@ -66,7 +66,7 @@ namespace Assignment3.Controllers
         {
             if (id != provider.Id)
             {
-                return BadRequest();
+                throw new StatusException(400, "Attempted to PUT provider with wrong Id");
             }
 
             _context.Entry(provider).State = EntityState.Modified;
@@ -80,7 +80,7 @@ namespace Assignment3.Controllers
             {
                 if (!ProviderExists(id))
                 {
-                    return NotFound();
+                    throw new StatusException(404, "No provider with that ID exists.");
                 }
                 else
                 {
@@ -111,7 +111,7 @@ namespace Assignment3.Controllers
             var provider = await _context.Provider.FindAsync(id);
             if (provider == null)
             {
-                return NotFound();
+                throw new StatusException(404, "No provider with that ID exists.");
             }
 
             _context.Provider.Remove(provider);

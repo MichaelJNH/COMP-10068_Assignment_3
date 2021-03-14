@@ -36,7 +36,7 @@ namespace Assignment3.Controllers
 
             if (organization == null)
             {
-                return NotFound();
+                throw new StatusException(404, "No organization with that ID exists.");
             }
 
             return organization;
@@ -55,9 +55,9 @@ namespace Assignment3.Controllers
                 results = await _context.Organization.Where(o => o.Type == type).ToListAsync();
 
             if (results == null)
-                return BadRequest();
+                throw new StatusException(400, "Missing search query.");
             else if (results.Count == 0)
-                return NotFound();
+                throw new StatusException(404, "No organizations were found.");
 
             return results;
         }
@@ -70,7 +70,7 @@ namespace Assignment3.Controllers
         {
             if (id != organization.Id)
             {
-                return BadRequest();
+                throw new StatusException(400, "Attempted to PUT organization with wrong Id");
             }
 
             _context.Entry(organization).State = EntityState.Modified;
@@ -84,7 +84,7 @@ namespace Assignment3.Controllers
             {
                 if (!OrganizationExists(id))
                 {
-                    return NotFound();
+                    throw new StatusException(404, "No organization with that ID exists.");
                 }
                 else
                 {
@@ -115,7 +115,7 @@ namespace Assignment3.Controllers
             var organization = await _context.Organization.FindAsync(id);
             if (organization == null)
             {
-                return NotFound();
+                throw new StatusException(404, "No organization with that ID exists.");
             }
 
             _context.Organization.Remove(organization);
